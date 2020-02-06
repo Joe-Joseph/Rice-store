@@ -5,12 +5,13 @@ import schema from './schema/schema';
 const app = express();
 
 app.use('/', graphqlHTTP({
-    schema: schema,
-    graphiql: true
+  schema,
+  graphiql: true
 }));
 
 const PORT = process.env.PORT || 4000;
 
+// eslint-disable-next-line no-console
 app.listen(PORT, console.log(`App is running on ${PORT}`));
 
 export default app;
