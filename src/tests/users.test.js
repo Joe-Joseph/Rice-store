@@ -14,4 +14,25 @@ describe('User resolver', () => {
         done();
       });
   });
+
+  it('Should create a user', (done) => {
+    request(app).post('/graphql')
+      .send({ query: 'mutation{ createUser(firstName:"Joseph", lastName:"Joe", email:"test@test.com", password:"password"){id firstName lastName}}' })
+      .expect(200)
+      .end((err, res) => {
+        res.body.data.createUser.should.be.an('object');
+        done();
+      });
+  });
+
+  it('Should login a user', (done) => {
+    request(app).post('/graphql')
+      .send({ query: '{loginUser(email:"test@test.com", password:"password"){message email token}}' })
+      .expect(200)
+      .end((err, res) => {
+        res.body.data.loginUser.should.be.an('object');
+        res.body.data.loginUser.email.should.equal('test@test.com');
+        done();
+      });
+  });
 });
