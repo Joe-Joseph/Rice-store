@@ -1,12 +1,17 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import schema from './schema/schema';
+import formatError from './helpers/errorMessages';
 
 const app = express();
 
+const { errorName } = formatError;
+
 app.use('/', graphqlHTTP({
   schema,
-  graphiql: true
+  graphiql: true,
+  context: { errorName },
+  customFormatErrorFn: (err) => formatError.getError(err)
 }));
 
 const PORT = process.env.PORT || 4000;
