@@ -15,6 +15,11 @@ const formatError = new FormatError([
     name: 'FORBIDDEN',
     message: 'Invalid email or password',
     statusCode: 403
+  },
+  {
+    name: 'NOT_FOUND',
+    message: 'Not found',
+    statusCode: 404
   }
 ]);
 
