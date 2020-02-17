@@ -35,4 +35,15 @@ describe('User resolver', () => {
         done();
       });
   });
+
+  it('Should reset password', (done) => {
+    request(app).post('/graphql')
+      .send({ query: '{passwordReset(email:"test@test.com"){email}}' })
+      .expect(200)
+      .end((err, res) => {
+        res.body.data.passwordReset.should.have.property('email');
+        res.body.data.passwordReset.email.should.equal('test@test.com');
+        done();
+      });
+  });
 });

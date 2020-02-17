@@ -1,7 +1,12 @@
 import bcrypt from 'bcryptjs';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 import model from '../models';
 import formatError from '../helpers/errorMessages';
-import { generateToken } from './tokenGenerator';
+import generateToken from './tokenGenerator';
+import findOneUser from '../helpers/findOneUser';
+
+dotenv.config();
 
 const { users } = model;
 
@@ -39,13 +44,38 @@ const loginUserFunction = async (args) => {
   if (!validPassword) {
     throw new Error(errorName.FORBIDDEN);
   }
-  const payload = {
-    id: registeredUser.id,
-    email: registeredUser.email,
-  };
 
-  const token = await generateToken(payload);
+  const token = await generateToken(registeredUser);
   return { message: 'Logged in successfully!!', email: registeredUser.email, token };
 };
 
-export { createUserFunction, loginUserFunction };
+const resetPassword = async (args) => {
+  const registeredUser = await findOneUser(args.email);
+
+  if (!registeredUser) {
+    throw new Error(errorName.NOT_FOUND);
+  }
+
+  const token = await generateToken(registeredUser);
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD
+    }
+  });
+
+  const mailMessage = {
+    from: 'woriors73@gmail.com',
+    to: 'jostheblessing@gmail.com',
+    subject: 'Rice store',
+    text: `It works !!!!!!!! http://localhost:4000/${token}`
+  };
+
+  transporter.sendMail(mailMessage);
+
+  return registeredUser;
+};
+
+export { createUserFunction, loginUserFunction, resetPassword };

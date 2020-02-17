@@ -6,7 +6,7 @@ import {
 } from 'graphql';
 import model from '../models';
 import userType from '../types/userTypes';
-import { loginUserFunction } from '../controllers/auth';
+import { loginUserFunction, resetPassword } from '../controllers/auth';
 
 const { users } = model;
 
@@ -38,6 +38,16 @@ const Query = new GraphQLObjectType({
         return loginUserFunction(args);
       }
     },
+
+    passwordReset: {
+      type: userType,
+      args: {
+        email: { type: GraphQLString }
+      },
+      resolve(parent, args) {
+        return resetPassword(args);
+      }
+    }
 
   }
 });

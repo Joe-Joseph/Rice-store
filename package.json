@@ -6,7 +6,7 @@
   "scripts": {
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "test:coveralls": "npm run test && nyc report --reporter=text-lcov | coveralls",
-    "test": "NODE_ENV=test npm run migrate && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require @babel/register src/tests/*.js --exit",
+    "test": "NODE_ENV=test npm run migrate && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require @babel/register --timeout 3000 src/tests/*.js --exit",
     "dev": "nodemon --exec babel-node ./src/index.js",
     "create": "NODE_ENV=staging sequelize db:migrate",
     "start": "npm run create && NODE_ENV=staging node --require @babel/register ./src/index.js",
@@ -31,6 +31,7 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/register": "^7.8.3",
     "@babel/runtime": "^7.8.4",
+    "@sendgrid/mail": "^6.5.2",
     "bcryptjs": "^2.4.3",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
@@ -41,11 +42,14 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.6.0",
     "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.4.2",
     "pg": "^7.18.1",
     "pg-hstore": "^2.3.3",
+    "sendgrid": "^5.2.3",
     "sequelize": "^5.21.3",
     "sequelize-cli": "^5.5.1",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "yup": "^0.28.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.8.3",
