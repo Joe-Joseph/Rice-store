@@ -20,6 +20,16 @@ const formatError = new FormatError([
     name: 'NOT_FOUND',
     message: 'Not found',
     statusCode: 404
+  },
+  {
+    name: 'UNAUTHORIZED',
+    message: 'You are anauthorized, Please login',
+    statusCode: 401
+  },
+  {
+    name: 'BAD_REQUEST',
+    message: 'You are anauthorized, Please login',
+    statusCode: 400
   }
 ]);
 
