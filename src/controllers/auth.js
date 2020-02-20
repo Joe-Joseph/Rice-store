@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import model from '../models';
 import formatError from '../helpers/errorMessages';
-import generateToken from './tokenGenerator';
+import { generateToken } from './tokenGenerator';
 import findOneUser from '../helpers/findOneUser';
 
 dotenv.config();
@@ -68,7 +68,7 @@ const resetPassword = async (args) => {
 
   const mailMessage = {
     from: 'woriors73@gmail.com',
-    to: 'jostheblessing@gmail.com',
+    to: `${registeredUser.email}`,
     subject: 'Rice store',
     text: `It works !!!!!!!! http://localhost:4000/${token}`
   };

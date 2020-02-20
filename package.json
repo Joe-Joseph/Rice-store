@@ -7,7 +7,7 @@
     "migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "test:coveralls": "npm run test && nyc report --reporter=text-lcov | coveralls",
     "test": "NODE_ENV=test npm run migrate && NODE_ENV=test nyc --reporter=html --reporter=text mocha --require @babel/register --timeout 3000 src/tests/*.js --exit",
-    "dev": "nodemon --exec babel-node ./src/index.js",
+    "dev": "NODE_ENV=staging nodemon --exec babel-node ./src/index.js",
     "create": "NODE_ENV=staging sequelize db:migrate",
     "start": "npm run create && NODE_ENV=staging node --require @babel/register ./src/index.js",
     "lint": "eslint ./",
