@@ -24,12 +24,9 @@ const createUserFunction = async (args) => {
     email: args.email,
     password: hashedPassword
   };
-  const createdUser = await users.create(user);
+  await users.create(user);
   const userData = {
-    id: createdUser.id,
-    firstName: createdUser.firstName,
-    lastName: createdUser.lastName,
-    email: createdUser.email,
+    ...user,
     password: null
   };
   return userData;
