@@ -40,6 +40,18 @@ describe('Round resolvers', () => {
       });
   });
 
+  it('Should get all rounds', (done) => {
+    request(app).post('/graphql')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ query: '{getAllRounds{roundId carPlate driverName createdAt}}' })
+      .expect(200)
+      .end((err, res) => {
+        res.body.data.getAllRounds.should.be.an('array');
+
+        done();
+      });
+  });
+
   it('Should not add a Product without logging in', (done) => {
     request(app).post('/graphql')
       .send({ query: 'mutation{ registerProduct(productName:"rice", bagSize:25, addedQuantity:20){roundId employee productName bagSize addedQuantity currentQuantity totalBags}}' })
@@ -64,7 +76,7 @@ describe('Round resolvers', () => {
   it('Should report sold Products', (done) => {
     request(app).post('/graphql')
       .set('Authorization', `Bearer ${token}`)
-      .send({ query: 'mutation{ sellProduct(productName:"rice", bagSize:25, soldQuantity:20, oneBagCost:25000){roundId employee productName bagSize soldQuantity currentQuantity totalBags}}' })
+      .send({ query: 'mutation{ sellProduct(productName:"rice", bagSize:25, soldQuantity:20, oneBagCost:25000){roundId employee productName bagSize addedQuantity currentQuantity totalBags}}' })
       .expect(200)
       .end((err, res) => {
         res.body.data.sellProduct.bagSize.should.equal('25kg');

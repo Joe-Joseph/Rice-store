@@ -8,7 +8,11 @@ import userType from '../types/userTypes';
 import { roundType, productType } from '../types/roundTypes';
 import { createUserFunction } from '../controllers/auth';
 import userValidation from '../helpers/userValidation';
-import { registerRoundResolver, addProductResolver, sellProductResolver } from '../controllers/rounds';
+import {
+  registerRoundResolver,
+  addProductResolver,
+  sellProductResolver
+} from '../controllers/rounds';
 import { roundValidation, productValidation } from '../helpers/roundValidation';
 
 

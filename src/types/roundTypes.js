@@ -6,7 +6,7 @@ const roundType = new GraphQLObjectType({
     roundId: { type: GraphQLInt },
     carPlate: { type: GraphQLString },
     driverName: { type: GraphQLString },
-    employee: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
   })
 });
 
@@ -19,12 +19,12 @@ const productType = new GraphQLObjectType({
     bagSize: { type: GraphQLString },
     oneBagCost: { type: GraphQLString },
     addedQuantity: { type: GraphQLString },
-    soldQuantity: { type: GraphQLString },
     currentQuantity: { type: GraphQLString },
     totalBags: { type: GraphQLString },
     transactionType: { type: GraphQLString },
     totalCost: { type: GraphQLString },
-    message: { type: GraphQLString }
+    message: { type: GraphQLString },
+    createdAt: { type: GraphQLString }
   })
 });
 

@@ -7,6 +7,9 @@ import {
 import model from '../models';
 import userType from '../types/userTypes';
 import { loginUserFunction, resetPassword } from '../controllers/auth';
+import { getAllRoundsResolver } from '../controllers/rounds';
+import { roundType, productType } from '../types/roundTypes';
+import { getTransctionsByRoundResolver, getOneTransactionResolver } from '../controllers/productTransactions';
 
 const { users } = model;
 
@@ -47,6 +50,31 @@ const Query = new GraphQLObjectType({
       resolve(parent, args) {
         return resetPassword(args);
       }
+    },
+
+    getAllRounds: {
+      type: new GraphQLList(roundType),
+      resolve(parent, args, req) {
+        return getAllRoundsResolver(req);
+      }
+    },
+
+    getTransactionsByRound: {
+      type: new GraphQLList(productType),
+      resolve(parent, args, req) {
+        return getTransctionsByRoundResolver(args, req);
+      }
+    },
+
+    getOneTransaction: {
+      type: productType,
+      args: {
+        transactionId: { type: GraphQLInt }
+      },
+      resolve(parent, args, req) {
+        return getOneTransactionResolver(args, req);
+      }
+
     }
 
   }

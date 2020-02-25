@@ -1,3 +1,4 @@
+import moment from 'moment';
 import model from '../models';
 import formatError from '../helpers/errorMessages';
 import findLastRoundId from '../helpers/lastAddedRoundIndex';
@@ -57,13 +58,12 @@ const addProductResolver = async (args, req) => {
 
   const registeredProduct = await products.create(productInfo);
   const {
-    productName, bagSize, addedQuantity, currentQuantity, totalBags
+    bagSize, addedQuantity, currentQuantity, totalBags
   } = registeredProduct;
 
   const registeredProductInfo = {
-    roundId,
+    ...registeredProduct.dataValues,
     employee: `${firstName} ${lastName}`,
-    productName,
     totalBags: `${totalBags} bags`,
     bagSize: `${bagSize} kg`,
     addedQuantity: `${addedQuantity} bags`,
@@ -110,29 +110,47 @@ const sellProductResolver = async (args, req) => {
 
   const registeredProduct = await products.create(productInfo);
   const {
-    productName,
     bagSize, oneBagCost,
     addedQuantity,
     currentQuantity,
-    transactionType,
     totalBags,
     totalCost
   } = registeredProduct;
 
   const registeredProductInfo = {
-    roundId,
+    ...registeredProduct.dataValues,
     employee: `${firstName} ${lastName}`,
-    productName,
-    transactionType,
     totalBags: `${totalBags} bags`,
     totalCost: `${totalCost} Rwf`,
     bagSize: `${bagSize}kg`,
     oneBagCost: `${oneBagCost} Rwf`,
-    soldQuantity: `${addedQuantity} bags`,
+    quantity: `${addedQuantity} bags`,
     currentQuantity: `${currentQuantity} bags`
   };
 
   return registeredProductInfo;
 };
 
-export { registerRoundResolver, addProductResolver, sellProductResolver };
+const getAllRoundsResolver = async (req) => {
+  if (!req.isAuth) {
+    throw new Error(errorName.UNAUTHORIZED);
+  }
+
+  const allRounds = await rounds.findAll();
+  const returnedData = [];
+  allRounds.forEach((element) => {
+    const { createdAt } = element.dataValues;
+    const round = { ...element.dataValues, createdAt: moment(createdAt).format('MMMM Do YYYY, h:mm:ss a') };
+
+    returnedData.push(round);
+  });
+
+  return returnedData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+};
+
+export {
+  registerRoundResolver,
+  addProductResolver,
+  sellProductResolver,
+  getAllRoundsResolver
+};
