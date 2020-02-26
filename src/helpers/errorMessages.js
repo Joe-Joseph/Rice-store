@@ -23,7 +23,7 @@ const formatError = new FormatError([
   },
   {
     name: 'UNAUTHORIZED',
-    message: 'You are anauthorized, Please login',
+    message: 'You are unauthorized, Please login',
     statusCode: 401
   },
   {

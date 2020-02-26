@@ -14,7 +14,7 @@ const authenticateUser = async (req, res, next) => {
   let decodedToken;
   try {
     req.isAuth = true;
-    decodedToken = decodeToken(token);
+    decodedToken = await decodeToken(token);
   } catch (error) {
     req.isAuth = false;
     return next();
