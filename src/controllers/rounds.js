@@ -3,15 +3,14 @@ import model from '../models';
 import formatError from '../helpers/errorMessages';
 import findLastRoundId from '../helpers/lastAddedRoundIndex';
 import { findTotalBagsByKg, findTotalBags } from '../helpers/totalBagsByKg';
+import handleErrors from '../helpers/errorHandler';
 
 const { errorName } = formatError;
 
 const { rounds, products } = model;
 
 const registerRoundResolver = async (args, req) => {
-  if (!req.isAuth) {
-    throw new Error(errorName.UNAUTHORIZED);
-  }
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
   const employee = await req.user;
   const { id } = employee;
@@ -26,9 +25,7 @@ const registerRoundResolver = async (args, req) => {
 };
 
 const addProductResolver = async (args, req) => {
-  if (!req.isAuth) {
-    throw new Error(errorName.UNAUTHORIZED);
-  }
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
   const roundId = await findLastRoundId();
 
@@ -74,9 +71,7 @@ const addProductResolver = async (args, req) => {
 };
 
 const sellProductResolver = async (args, req) => {
-  if (!req.isAuth) {
-    throw new Error(errorName.UNAUTHORIZED);
-  }
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
   const employee = await req.user;
   const { firstName, lastName } = employee;
@@ -132,9 +127,7 @@ const sellProductResolver = async (args, req) => {
 };
 
 const getAllRoundsResolver = async (req) => {
-  if (!req.isAuth) {
-    throw new Error(errorName.UNAUTHORIZED);
-  }
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
   const allRounds = await rounds.findAll();
   const returnedData = [];

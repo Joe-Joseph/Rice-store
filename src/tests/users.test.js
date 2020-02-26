@@ -27,7 +27,7 @@ describe('User resolver', () => {
 
   it('Should login a user', (done) => {
     request(app).post('/graphql')
-      .send({ query: '{loginUser(email:"test@test.com", password:"password"){message email token}}' })
+      .send({ query: 'mutation{loginUser(email:"test@test.com", password:"password"){message email token}}' })
       .expect(200)
       .end((err, res) => {
         res.body.data.loginUser.should.be.an('object');

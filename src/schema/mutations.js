@@ -6,7 +6,7 @@ import {
 } from 'graphql';
 import userType from '../types/userTypes';
 import { roundType, productType } from '../types/roundTypes';
-import { createUserFunction } from '../controllers/auth';
+import { createUserFunction, loginUserFunction } from '../controllers/auth';
 import userValidation from '../helpers/userValidation';
 import {
   registerRoundResolver,
@@ -14,6 +14,7 @@ import {
   sellProductResolver
 } from '../controllers/rounds';
 import { roundValidation, productValidation } from '../helpers/roundValidation';
+import { updateTransactionResolver, deleteTransactionResolver } from '../controllers/productTransactions';
 
 
 const Mutation = new GraphQLObjectType({
@@ -54,6 +55,17 @@ const Mutation = new GraphQLObjectType({
       }
     },
 
+    loginUser: {
+      type: userType,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      resolve(parent, args) {
+        return loginUserFunction(args);
+      }
+    },
+
     registerProduct: {
       type: productType,
       args: {
@@ -88,6 +100,29 @@ const Mutation = new GraphQLObjectType({
           return err;
         }
         return sellProductResolver(args, req);
+      }
+    },
+
+    updateTransaction: {
+      type: productType,
+      args: {
+        productName: { type: new GraphQLNonNull(GraphQLString) },
+        bagSize: { type: new GraphQLNonNull(GraphQLInt) },
+        transactionId: { type: new GraphQLNonNull(GraphQLInt) },
+        addedQuantity: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      resolve(parent, args, req) {
+        return updateTransactionResolver(args, req);
+      }
+    },
+
+    deleteTransaction: {
+      type: productType,
+      args: {
+        transactionId: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      resolve(parent, args, req) {
+        return deleteTransactionResolver(args, req);
       }
     }
   }
