@@ -16,7 +16,7 @@ const generateToken = async (user) => {
 };
 
 const decodeToken = async (token) => {
-  const user = await jwt.decode(token, process.env.SECRET_KEY);
+  const user = await jwt.verify(token, process.env.SECRET_KEY);
 
   return user;
 };

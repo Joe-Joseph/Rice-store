@@ -1,19 +1,18 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
+import cors from 'cors';
 import schema from './schema/schema';
 import formatError from './helpers/errorMessages';
 import authenticateUser from './middleware/auth';
 
 const app = express();
+app.use(cors());
 
 app.use(authenticateUser);
-
-// const { errorName } = formatError;
 
 app.use('/', graphqlHTTP({
   schema,
   graphiql: true,
-  // context: { errorName },
   customFormatErrorFn: (err) => formatError.getError(err)
 }));
 
