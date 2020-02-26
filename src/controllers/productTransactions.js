@@ -2,20 +2,18 @@ import moment from 'moment';
 import model from '../models';
 import formatError from '../helpers/errorMessages';
 import findLastRoundId from '../helpers/lastAddedRoundIndex';
+import findOneTransaction from '../helpers/findTransaction';
+import handleErrors from '../helpers/errorHandler';
 
 const { errorName } = formatError;
 
 const { products } = model;
 
 const getTransctionsByRoundResolver = async (args, req) => {
-  if (!req.isAuth) {
-    throw new Error(errorName.UNAUTHORIZED);
-  }
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
   const lastRoundId = await findLastRoundId();
-  if (!lastRoundId) {
-    throw new Error('Round does not exist yet.');
-  }
+  handleErrors(lastRoundId, 'Round does not exist yet.');
 
   const transactions = await products.findAll({ where: { roundId: lastRoundId } });
 
@@ -35,15 +33,11 @@ const getTransctionsByRoundResolver = async (args, req) => {
 };
 
 const getOneTransactionResolver = async (args, req) => {
-  if (!req.isAuth) {
-    throw new Error(errorName.UNAUTHORIZED);
-  }
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
   const transaction = await products.findOne({ where: { transactionId: args.transactionId } });
 
-  if (!transaction) {
-    throw new Error('Transaction not found');
-  }
+  handleErrors(transaction, 'Transaction not found');
 
   const newTransaction = {
     ...transaction.dataValues,
@@ -53,4 +47,37 @@ const getOneTransactionResolver = async (args, req) => {
   return newTransaction;
 };
 
-export { getTransctionsByRoundResolver, getOneTransactionResolver };
+const updateTransactionResolver = async (args, req) => {
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
+
+  const transaction = await findOneTransaction(args.transactionId);
+
+  handleErrors(transaction, 'Transaction not found');
+
+  const updatedTransaction = await transaction.update({
+    productName: args.productName || transaction.productName,
+    bagSize: args.bagSize || transaction.bagSize,
+    addedQuantity: args.addedQuantity || transaction.addedQuantity
+  });
+
+  return updatedTransaction;
+};
+
+const deleteTransactionResolver = async (args, req) => {
+  handleErrors(req.isAuth, errorName.UNAUTHORIZED);
+
+  const transaction = await findOneTransaction(args.transactionId);
+
+  handleErrors(transaction, 'Transaction not found');
+
+  await products.destroy({ where: { transactionId: args.transactionId }, returning: true });
+
+  return { message: 'Transaction deleted successfuly' };
+};
+
+export {
+  getTransctionsByRoundResolver,
+  getOneTransactionResolver,
+  updateTransactionResolver,
+  deleteTransactionResolver
+};

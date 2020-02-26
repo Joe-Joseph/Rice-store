@@ -5,6 +5,7 @@ import model from '../models';
 import formatError from '../helpers/errorMessages';
 import { generateToken } from './tokenGenerator';
 import findOneUser from '../helpers/findOneUser';
+import handleErrors from '../helpers/errorHandler';
 
 dotenv.config();
 
@@ -34,13 +35,10 @@ const createUserFunction = async (args) => {
 
 const loginUserFunction = async (args) => {
   const registeredUser = await users.findOne({ where: { email: args.email } });
-  if (!registeredUser) {
-    throw new Error(errorName.FORBIDDEN);
-  }
+  handleErrors(registeredUser, errorName.FORBIDDEN);
+
   const validPassword = await bcrypt.compare(args.password, registeredUser.password);
-  if (!validPassword) {
-    throw new Error(errorName.FORBIDDEN);
-  }
+  handleErrors(validPassword, errorName.FORBIDDEN);
 
   const token = await generateToken(registeredUser);
   return { message: 'Logged in successfully!!', email: registeredUser.email, token };
@@ -49,9 +47,7 @@ const loginUserFunction = async (args) => {
 const resetPassword = async (args) => {
   const registeredUser = await findOneUser(args.email);
 
-  if (!registeredUser) {
-    throw new Error(errorName.NOT_FOUND);
-  }
+  handleErrors(registeredUser, errorName.NOT_FOUND);
 
   const token = await generateToken(registeredUser);
 

@@ -14,6 +14,7 @@ import {
   sellProductResolver
 } from '../controllers/rounds';
 import { roundValidation, productValidation } from '../helpers/roundValidation';
+import { updateTransactionResolver, deleteTransactionResolver } from '../controllers/productTransactions';
 
 
 const Mutation = new GraphQLObjectType({
@@ -88,6 +89,29 @@ const Mutation = new GraphQLObjectType({
           return err;
         }
         return sellProductResolver(args, req);
+      }
+    },
+
+    updateTransaction: {
+      type: productType,
+      args: {
+        productName: { type: new GraphQLNonNull(GraphQLString) },
+        bagSize: { type: new GraphQLNonNull(GraphQLInt) },
+        transactionId: { type: new GraphQLNonNull(GraphQLInt) },
+        addedQuantity: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      resolve(parent, args, req) {
+        return updateTransactionResolver(args, req);
+      }
+    },
+
+    deleteTransaction: {
+      type: productType,
+      args: {
+        transactionId: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      resolve(parent, args, req) {
+        return deleteTransactionResolver(args, req);
       }
     }
   }
