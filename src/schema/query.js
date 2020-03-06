@@ -6,8 +6,8 @@ import {
 } from 'graphql';
 import model from '../models';
 import userType from '../types/userTypes';
-import { loginUserFunction, resetPassword } from '../controllers/auth';
 import { getAllRoundsResolver } from '../controllers/rounds';
+import { resetPassword } from '../controllers/auth';
 import { roundType, productType } from '../types/roundTypes';
 import { getTransctionsByRoundResolver, getOneTransactionResolver } from '../controllers/productTransactions';
 
@@ -28,17 +28,6 @@ const Query = new GraphQLObjectType({
       type: new GraphQLList(userType),
       resolve() {
         return users.findAll({});
-      }
-    },
-
-    loginUser: {
-      type: userType,
-      args: {
-        email: { type: GraphQLString },
-        password: { type: GraphQLString }
-      },
-      resolve(parent, args) {
-        return loginUserFunction(args);
       }
     },
 

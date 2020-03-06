@@ -6,7 +6,7 @@ import {
 } from 'graphql';
 import userType from '../types/userTypes';
 import { roundType, productType } from '../types/roundTypes';
-import { createUserFunction } from '../controllers/auth';
+import { createUserFunction, loginUserFunction } from '../controllers/auth';
 import userValidation from '../helpers/userValidation';
 import {
   registerRoundResolver,
@@ -52,6 +52,17 @@ const Mutation = new GraphQLObjectType({
           return err;
         }
         return registerRoundResolver(args, req);
+      }
+    },
+
+    loginUser: {
+      type: userType,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      resolve(parent, args) {
+        return loginUserFunction(args);
       }
     },
 
