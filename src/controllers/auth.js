@@ -41,7 +41,12 @@ const loginUserFunction = async (args) => {
   handleErrors(validPassword, errorName.FORBIDDEN);
 
   const token = await generateToken(registeredUser);
-  return { message: 'Logged in successfully!!', email: registeredUser.email, token };
+  return {
+    message: 'Logged in successfully!!',
+    email: registeredUser.email,
+    firstName: registeredUser.firstName,
+    token
+  };
 };
 
 const resetPassword = async (args) => {
