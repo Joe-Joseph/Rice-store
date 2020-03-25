@@ -50,7 +50,7 @@ const loginUserFunction = async (args) => {
 };
 
 const resetPassword = async (args) => {
-  const registeredUser = await findOneUser(args.email);
+  const registeredUser = await await findOneUser({ where: { email: args.email } });
 
   handleErrors(registeredUser, errorName.NOT_FOUND);
 

@@ -17,7 +17,7 @@ describe('User resolver', () => {
 
   it('Should create a user', (done) => {
     request(app).post('/graphql')
-      .send({ query: 'mutation{ createUser(firstName:"Joseph", lastName:"Joe", email:"test@test.com", password:"password"){id firstName lastName}}' })
+      .send({ query: 'mutation{ createUser(firstName:"Joseph", lastName:"Joe", email:"test1@test.com", password:"password"){id firstName lastName}}' })
       .expect(200)
       .end((err, res) => {
         res.body.data.createUser.should.be.an('object');
@@ -27,11 +27,11 @@ describe('User resolver', () => {
 
   it('Should login a user', (done) => {
     request(app).post('/graphql')
-      .send({ query: 'mutation{loginUser(email:"test@test.com", password:"password"){message email token}}' })
+      .send({ query: 'mutation{loginUser(email:"test1@test.com", password:"password"){message email token}}' })
       .expect(200)
       .end((err, res) => {
         res.body.data.loginUser.should.be.an('object');
-        res.body.data.loginUser.email.should.equal('test@test.com');
+        res.body.data.loginUser.email.should.equal('test1@test.com');
         done();
       });
   });

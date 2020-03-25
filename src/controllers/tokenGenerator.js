@@ -5,7 +5,7 @@ dotenv.config();
 
 const generateToken = async (user) => {
   const data = {
-    id: user.id,
+    id: user.userId,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName

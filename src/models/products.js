@@ -24,15 +24,32 @@ module.exports = (sequelize, DataTypes) => {
         key: 'roundId'
       }
     },
+    userId: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'userId'
+      }
+    },
     transactionType: { allowNull: false, type: String },
     totalCost: { allowNull: false, type: DataTypes.INTEGER }
   }, {});
 
   products.associate = (models) => {
     // associations can be defined here
-    models.products.belongsTo(models.rounds, {
+    products.belongsTo(models.rounds, {
       foreignKey: 'roundId',
       targetKey: 'roundId',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
+    });
+
+    products.belongsTo(models.users, {
+      foreignKey: 'userId',
+      targetKey: 'userId',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     });

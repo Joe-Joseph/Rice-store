@@ -24,6 +24,16 @@ module.exports = {
         key: 'roundId'
       }
     },
+    userId: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'userId'
+      }
+    },
     transactionType: { type: Sequelize.STRING },
     totalCost: { type: Sequelize.INTEGER },
     createdAt: {

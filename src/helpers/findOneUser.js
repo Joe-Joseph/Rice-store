@@ -2,8 +2,8 @@ import model from '../models';
 
 const { users } = model;
 
-const findOneUser = async (userEmail) => {
-  const user = await users.findOne({ where: { email: userEmail } });
+const findOneUser = async (condition) => {
+  const user = await users.findOne(condition);
 
   return user;
 };

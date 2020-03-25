@@ -2,6 +2,7 @@ import moment from 'moment';
 import model from '../models';
 import formatError from '../helpers/errorMessages';
 import findLastRoundId from '../helpers/lastAddedRoundIndex';
+import findOneUser from '../helpers/findOneUser';
 import { findTotalBagsByKg, findTotalBags } from '../helpers/totalBagsByKg';
 import handleErrors from '../helpers/errorHandler';
 
@@ -26,6 +27,8 @@ const registerRoundResolver = async (args, req) => {
 
 const addProductResolver = async (args, req) => {
   handleErrors(req.isAuth, errorName.UNAUTHORIZED);
+  const employee = await req.user;
+  const { id } = employee;
 
   const roundId = await findLastRoundId();
 
@@ -38,8 +41,8 @@ const addProductResolver = async (args, req) => {
 
   const remainingBags = totalAddedBagsByKg - totalSoldBagsByKg;
 
-  const employee = await req.user;
-  const { firstName, lastName } = employee;
+  const user = await findOneUser({ where: { userId: id } });
+  const { dataValues: { firstName, lastName } } = user;
 
   const productInfo = {
     productName: args.productName,
@@ -49,6 +52,7 @@ const addProductResolver = async (args, req) => {
     currentQuantity: remainingBags + args.addedQuantity,
     totalBags: remainingTotalBags + args.addedQuantity,
     roundId,
+    userId: id,
     transactionType: 'added',
     totalCost: 0
   };
@@ -98,6 +102,7 @@ const sellProductResolver = async (args, req) => {
     addedQuantity: args.soldQuantity,
     currentQuantity: remainingBags - args.soldQuantity,
     roundId,
+    userId: employee.id,
     transactionType: 'sold',
     totalBags: remainingTotalBags - args.soldQuantity,
     totalCost: args.oneBagCost * args.soldQuantity

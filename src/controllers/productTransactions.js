@@ -4,6 +4,7 @@ import formatError from '../helpers/errorMessages';
 import findLastRoundId from '../helpers/lastAddedRoundIndex';
 import findOneTransaction from '../helpers/findTransaction';
 import handleErrors from '../helpers/errorHandler';
+import findOneUser from '../helpers/findOneUser';
 
 const { errorName } = formatError;
 
@@ -11,24 +12,28 @@ const { products } = model;
 
 const getTransctionsByRoundResolver = async (args, req) => {
   handleErrors(req.isAuth, errorName.UNAUTHORIZED);
+  const employee = await req.user;
+  const { id } = employee;
 
   const lastRoundId = await findLastRoundId();
   handleErrors(lastRoundId, 'Round does not exist yet.');
 
-  const transactions = await products.findAll({ where: { roundId: lastRoundId } });
+  const transactions = await products.findAll({ where: { roundId: lastRoundId }, order: [['createdAt', 'DESC']] });
 
   const allTransactions = [];
+  const user = await findOneUser({ where: { userId: id } });
+  const { dataValues: { firstName, lastName } } = user;
 
-  transactions.forEach((element) => {
+  transactions.forEach(async (element) => {
     const { dataValues } = element;
+
     const data = {
       ...dataValues,
+      employee: `${firstName} ${lastName}`,
       createdAt: moment(dataValues.createdAt).format('MMMM Do YYYY, h:mm:ss a')
     };
-
     allTransactions.push(data);
   });
-
   return allTransactions;
 };
 
