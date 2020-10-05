@@ -9,6 +9,7 @@ module.exports = {
       autoIncrement: true
     },
     productName: { type: Sequelize.STRING },
+    productType: { type: Sequelize.STRING },
     bagSize: { type: Sequelize.INTEGER },
     oneBagCost: { type: Sequelize.INTEGER },
     addedQuantity: { type: Sequelize.INTEGER },

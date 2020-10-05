@@ -29,10 +29,10 @@ const addProductResolver = async (args, req) => {
 
   const roundId = await findLastRoundId();
 
-  const totalSoldBagsByKg = await findTotalBagsByKg(args.bagSize, 'sold');
-  const totalAddedBagsByKg = await findTotalBagsByKg(args.bagSize, 'added');
-  const totalAddedBags = await findTotalBags('added');
-  const totalSoldBags = await findTotalBags('sold');
+  const totalSoldBagsByKg = await findTotalBagsByKg(args.bagSize, 'sold', args.productName);
+  const totalAddedBagsByKg = await findTotalBagsByKg(args.bagSize, 'added', args.productName);
+  const totalAddedBags = await findTotalBags('added', args.productType);
+  const totalSoldBags = await findTotalBags('sold', args.productType);
 
   const remainingTotalBags = totalAddedBags - totalSoldBags;
 
@@ -43,6 +43,7 @@ const addProductResolver = async (args, req) => {
 
   const productInfo = {
     productName: args.productName,
+    productType: args.productType,
     bagSize: args.bagSize,
     oneBagCost: 0,
     addedQuantity: args.addedQuantity,
@@ -78,10 +79,10 @@ const sellProductResolver = async (args, req) => {
 
   const roundId = await findLastRoundId();
 
-  const totalSoldBagsByKg = await findTotalBagsByKg(args.bagSize, 'sold');
-  const totalAddedBagsByKg = await findTotalBagsByKg(args.bagSize, 'added');
-  const totalAddedBags = await findTotalBags('added');
-  const totalSoldBags = await findTotalBags('sold');
+  const totalSoldBagsByKg = await findTotalBagsByKg(args.bagSize, 'sold', args.productName);
+  const totalAddedBagsByKg = await findTotalBagsByKg(args.bagSize, 'added', args.productName);
+  const totalAddedBags = await findTotalBags('added', args.productType);
+  const totalSoldBags = await findTotalBags('sold', args.productType);
 
   const remainingTotalBags = totalAddedBags - totalSoldBags;
 
@@ -93,6 +94,7 @@ const sellProductResolver = async (args, req) => {
 
   const productInfo = {
     productName: args.productName,
+    productType: args.productType,
     bagSize: args.bagSize,
     oneBagCost: args.oneBagCost,
     addedQuantity: args.soldQuantity,
@@ -109,7 +111,8 @@ const sellProductResolver = async (args, req) => {
     addedQuantity,
     currentQuantity,
     totalBags,
-    totalCost
+    totalCost,
+    productType
   } = registeredProduct;
 
   const registeredProductInfo = {
@@ -120,7 +123,8 @@ const sellProductResolver = async (args, req) => {
     bagSize: `${bagSize}kg`,
     oneBagCost: `${oneBagCost} Rwf`,
     quantity: `${addedQuantity} bags`,
-    currentQuantity: `${currentQuantity} bags`
+    currentQuantity: `${currentQuantity} bags`,
+    productType
   };
 
   return registeredProductInfo;

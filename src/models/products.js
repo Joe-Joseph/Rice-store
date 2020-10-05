@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     productName: { allowNull: false, type: String },
+    productType: { allowNull: false, type: String },
     bagSize: { allowNull: false, type: String },
     oneBagCost: { allowNull: false, type: DataTypes.INTEGER },
     addedQuantity: { allowNull: false, type: DataTypes.INTEGER },

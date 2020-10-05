@@ -70,6 +70,7 @@ const Mutation = new GraphQLObjectType({
       type: productType,
       args: {
         productName: { type: new GraphQLNonNull(GraphQLString) },
+        productType: { type: new GraphQLNonNull(GraphQLString) },
         bagSize: { type: new GraphQLNonNull(GraphQLInt) },
         addedQuantity: { type: new GraphQLNonNull(GraphQLInt) },
       },
@@ -88,6 +89,7 @@ const Mutation = new GraphQLObjectType({
       type: productType,
       args: {
         productName: { type: new GraphQLNonNull(GraphQLString) },
+        productType: { type: new GraphQLNonNull(GraphQLString) },
         bagSize: { type: new GraphQLNonNull(GraphQLInt) },
         oneBagCost: { type: new GraphQLNonNull(GraphQLInt) },
         soldQuantity: { type: new GraphQLNonNull(GraphQLInt) },
@@ -107,6 +109,7 @@ const Mutation = new GraphQLObjectType({
       type: productType,
       args: {
         productName: { type: new GraphQLNonNull(GraphQLString) },
+        productType: { type: new GraphQLNonNull(GraphQLString) },
         bagSize: { type: new GraphQLNonNull(GraphQLInt) },
         transactionId: { type: new GraphQLNonNull(GraphQLInt) },
         addedQuantity: { type: new GraphQLNonNull(GraphQLInt) },

@@ -2,8 +2,9 @@ import model from '../models';
 
 const { products } = model;
 
-const findTotalBagsByKg = async (bagSize, transactionType) => {
-  const productByBagSize = await products.findAll({ where: { bagSize, transactionType } });
+const findTotalBagsByKg = async (bagSize, transactionType, productName) => {
+  // eslint-disable-next-line max-len
+  const productByBagSize = await products.findAll({ where: { bagSize, transactionType, productName } });
   let totalBagsByKg = 0;
   productByBagSize.forEach((element) => {
     totalBagsByKg += element.addedQuantity;
@@ -12,8 +13,8 @@ const findTotalBagsByKg = async (bagSize, transactionType) => {
   return totalBagsByKg;
 };
 
-const findTotalBags = async (transactionType) => {
-  const productByBagSize = await products.findAll({ where: { transactionType } });
+const findTotalBags = async (transactionType, productType) => {
+  const productByBagSize = await products.findAll({ where: { transactionType, productType } });
   let totalBags = 0;
   productByBagSize.forEach((element) => {
     totalBags += element.addedQuantity;
