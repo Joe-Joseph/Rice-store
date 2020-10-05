@@ -13,9 +13,11 @@ const roundType = new GraphQLObjectType({
 const productType = new GraphQLObjectType({
   name: 'product',
   fields: () => ({
+    TransactionId: { type: GraphQLInt },
     roundId: { type: GraphQLInt },
     employee: { type: GraphQLString },
     productName: { type: GraphQLString },
+    productType: { type: GraphQLString },
     bagSize: { type: GraphQLString },
     oneBagCost: { type: GraphQLString },
     addedQuantity: { type: GraphQLString },
