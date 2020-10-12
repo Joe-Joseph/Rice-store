@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     employeId: { allowNull: false, type: DataTypes.INTEGER }
   }, {});
 
-  rounds.associate = (models) => {
-    // associations can be defined here
-    models.rounds.hasMany(models.products, {
-      foreignKey: 'roundId',
-      targetKey: 'roundId',
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
-  };
+  // rounds.associate = (models) => {
+  //   // associations can be defined here
+  //   models.rounds.hasMany(models.products, {
+  //     foreignKey: 'roundId',
+  //     targetKey: 'roundId',
+  //     onUpdate: 'CASCADE',
+  //     onDelete: 'CASCADE'
+  //   });
+  // };
   return rounds;
 };

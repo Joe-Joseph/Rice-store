@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     firstName: { allowNull: false, type: String },
     lastName: { allowNull: false, type: String },
+    role: { allowNull: false, type: String },
     email: {
       allowNull: false,
       type: String,
@@ -18,8 +19,10 @@ module.exports = (sequelize, DataTypes) => {
     password: { allowNull: false, type: String },
   }, {});
 
-  // users.associate = function (models) {
-  //   // associations can be defined here
-  // };
+  // eslint-disable-next-line no-unused-vars
+  users.associate = (models) => {
+    // associations can be defined here
+    // models.users.hasOne(models.stores);
+  };
   return users;
 };

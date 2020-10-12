@@ -18,11 +18,18 @@ const createUserFunction = async (args) => {
   if (existingUser) {
     throw new Error(errorName.CONFLICT);
   }
-  const hashedPassword = await bcrypt.hash(args.password, 12);
+  const {
+    firstName,
+    lastName,
+    email,
+    password
+  } = args;
+  const hashedPassword = await bcrypt.hash(password, 12);
   const user = {
-    firstName: args.firstName,
-    lastName: args.lastName,
-    email: args.email,
+    firstName,
+    lastName,
+    email,
+    role: 'user',
     password: hashedPassword
   };
   await users.create(user);
@@ -36,11 +43,24 @@ const createUserFunction = async (args) => {
 const loginUserFunction = async (args) => {
   const registeredUser = await users.findOne({ where: { email: args.email } });
   handleErrors(registeredUser, errorName.FORBIDDEN);
-
-  const validPassword = await bcrypt.compare(args.password, registeredUser.password);
+  console.log('USERS HHH', registeredUser.dataValues);
+  const {
+    userId,
+    firstName,
+    lastName,
+    role,
+    password
+  } = registeredUser.dataValues;
+  const payload = {
+    userId,
+    firstName,
+    lastName,
+    role
+  };
+  const validPassword = await bcrypt.compare(args.password, password);
   handleErrors(validPassword, errorName.FORBIDDEN);
 
-  const token = await generateToken(registeredUser);
+  const token = await generateToken(payload);
   return {
     message: 'Logged in successfully!!',
     email: registeredUser.email,

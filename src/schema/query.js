@@ -8,8 +8,11 @@ import model from '../models';
 import userType from '../types/userTypes';
 import { getAllRoundsResolver } from '../controllers/rounds';
 import { resetPassword } from '../controllers/auth';
-import { roundType, productType } from '../types/roundTypes';
-import { getTransctionsByRoundResolver, getOneTransactionResolver } from '../controllers/productTransactions';
+import { roundType } from '../types/roundTypes';
+import transactionType from '../types/transactionTypes';
+import { getAllTransactionsResolver, getOneTransactionResolver } from '../controllers/transactions';
+import { getAllProductsResolver } from '../controllers/product';
+import productType from '../types/productTypes';
 
 const { users } = model;
 
@@ -48,15 +51,25 @@ const Query = new GraphQLObjectType({
       }
     },
 
-    getTransactionsByRound: {
+    getAllTransactions: {
+      type: new GraphQLList(transactionType),
+      async resolve(parent, args, req) {
+        // const transctions = await getAllTransactionsResolver(args, req);
+        await getAllTransactionsResolver(args, req);
+        // console.log('Transactions', await getAllTransactionsResolver(args, req));
+        return getAllTransactionsResolver(args, req);
+      }
+    },
+
+    getAllProducts: {
       type: new GraphQLList(productType),
       resolve(parent, args, req) {
-        return getTransctionsByRoundResolver(args, req);
+        return getAllProductsResolver(args, req);
       }
     },
 
     getOneTransaction: {
-      type: productType,
+      type: transactionType,
       args: {
         transactionId: { type: GraphQLInt }
       },

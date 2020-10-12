@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const products = sequelize.define('products', {
-    transactionId: {
+    productId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       required: true,
@@ -8,35 +8,37 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       autoIncrement: true
     },
-    productName: { allowNull: false, type: String },
-    productType: { allowNull: false, type: String },
-    bagSize: { allowNull: false, type: String },
-    oneBagCost: { allowNull: false, type: DataTypes.INTEGER },
-    addedQuantity: { allowNull: false, type: DataTypes.INTEGER },
-    currentQuantity: { allowNull: false, type: DataTypes.INTEGER },
-    totalBags: { allowNull: false, type: DataTypes.INTEGER },
-    roundId: {
+    storeId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       references: {
-        model: 'rounds',
-        key: 'roundId'
+        model: 'stores',
+        key: 'storeId'
       }
     },
-    transactionType: { allowNull: false, type: String },
-    totalCost: { allowNull: false, type: DataTypes.INTEGER }
+    userId: { allowNull: false, type: DataTypes.INTEGER },
+    productName: { allowNull: false, type: String },
+    productType: { allowNull: false, type: DataTypes.STRING },
+    bagSize: { allowNull: false, type: String },
+    quantity: { allowNull: false, type: DataTypes.INTEGER },
+    totalBags: { allowNull: false, type: DataTypes.INTEGER },
   }, {});
 
+  // eslint-disable-next-line no-unused-vars
   products.associate = (models) => {
     // associations can be defined here
-    models.products.belongsTo(models.rounds, {
-      foreignKey: 'roundId',
-      targetKey: 'roundId',
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
+    // models.products.belongsTo(models.stores, {
+    //   foreignKey: {
+    //     allowNull: false
+    //   }
+    // });
+
+    // models.products.hasMany(models.transactions, {
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'CASCADE',
+    // });
   };
   return products;
 };

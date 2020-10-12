@@ -28,7 +28,7 @@ const formatError = new FormatError([
   },
   {
     name: 'BAD_REQUEST',
-    message: 'You are anauthorized, Please login',
+    message: 'Please fill all the required field correctly',
     statusCode: 400
   }
 ]);

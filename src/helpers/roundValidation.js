@@ -7,9 +7,13 @@ const roundValidation = yup.object().shape({
 
 const productValidation = yup.object().shape({
   productName: yup.string().trim().min(3).max(255),
-  bagSize: yup.number().required(),
+  bagSize: yup.number(),
   oneBagCost: yup.number(),
-  soldQuantity: yup.number(),
+  quantity: yup.number(),
 });
 
-export { roundValidation, productValidation };
+const storeValidation = yup.object().shape({
+  storeLocation: yup.string().trim().min(3).max(255),
+});
+
+export { roundValidation, productValidation, storeValidation };
