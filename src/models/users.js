@@ -10,10 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     firstName: { allowNull: false, type: String },
     lastName: { allowNull: false, type: String },
     role: { allowNull: false, type: String },
-    email: {
+    username: {
       allowNull: false,
       type: String,
-      lowercase: true,
       unique: true,
     },
     password: { allowNull: false, type: String },

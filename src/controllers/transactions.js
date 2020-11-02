@@ -42,18 +42,24 @@ const addProductResolver = async (args, req) => {
     quantity: product.quantity + registeredProduct.quantity
   });
 
+  const allTransactions = await transactions.findAll({ where: { userId: id } });
+  const newTransaction = allTransactions[allTransactions.length - 1];
+  const { transactionId } = newTransaction;
+
   const { quantity, oneBagCost } = registeredProduct;
 
   const registeredProductInfo = {
     ...registeredProduct.dataValues,
+    transactionId,
     productName: product.productName,
     productType: product.productType,
     employee: `${firstName} ${lastName}`,
-    totalBags: `${product.totalBags} bags`,
-    bagSize: `${product.bagSize} kg`,
-    quantity: `${quantity} bags`,
+    totalBags: product.totalBags,
+    bagSize: product.bagSize,
+    quantity,
     oneBagCost,
-    currentQuantity: `${updated.quantity} bags`,
+    currentQuantity: updated.quantity,
+    createdAt: moment(registeredProduct.createdAt).format('L'),
   };
 
   return registeredProductInfo;
@@ -83,6 +89,7 @@ const sellProductResolver = async (args, req) => {
     productId,
     oneBagCost: args.oneBagCost,
     quantity: args.quantity,
+    userId: id,
     transactionType: 'sold',
     totalCost: args.oneBagCost * args.quantity
   };
@@ -91,18 +98,23 @@ const sellProductResolver = async (args, req) => {
   });
 
   const registeredProduct = await transactions.create(productInfo);
+  const allTransactions = await transactions.findAll({ where: { userId: id } });
+  const newTransaction = allTransactions[allTransactions.length - 1];
+  const { transactionId } = newTransaction;
 
   const { quantity, oneBagCost } = registeredProduct;
 
   const registeredProductInfo = {
     ...registeredProduct.dataValues,
+    transactionId,
     productName,
     productType,
     employee: `${firstName} ${lastName}`,
-    bagSize: `${registeredProduct.bagSize} kg`,
-    quantity: `${quantity} bags`,
+    bagSize: args.bagSize,
+    quantity,
     oneBagCost,
-    currentQuantity: `${updated.quantity} bags`,
+    currentQuantity: updated.quantity,
+    createdAt: moment(registeredProduct.createdAt).format('L'),
   };
 
   return registeredProductInfo;
@@ -117,8 +129,11 @@ const getAllTransactionsResolver = async (args, req) => {
   const allTransactions = await transactions.findAll({ where: { userId: id } });
   handleErrors(allTransactions, 'Transaction not found');
 
-  const transactionsFound = getAllTransactions(allTransactions);
-  return transactionsFound;
+  const transactionsFound = await getAllTransactions(allTransactions);
+  const sortTransactions = transactionsFound
+    && transactionsFound.length > 0
+    && transactionsFound.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return sortTransactions;
 };
 
 const getOneTransactionResolver = async (args, req) => {
@@ -160,6 +175,7 @@ const updateTransactionResolver = async (args, req) => {
   return updatedTransaction;
 };
 
+// eslint-disable-next-line consistent-return
 const deleteOneTransactionResolver = async (args, req) => {
   handleErrors(req.isAuth, errorName.UNAUTHORIZED);
 
@@ -172,28 +188,22 @@ const deleteOneTransactionResolver = async (args, req) => {
   const { productId } = transaction.dataValues;
   const product = await products.findOne({ where: { productId } });
   if (transaction.transactionType === 'sold') {
-    product.quantity += transaction.quantity;
-    product.save();
-  } else if (transaction.transactionType === 'added') {
-    product.quantity -= transaction.quantity;
-    product.save();
+    await product.update({ quantity: product.quantity + transaction.quantity });
+    await transaction.destroy();
+    return { message: 'Transaction deleted' };
   }
 
-  await transaction.destroy();
-  return 'Transaction deleted';
+  if (transaction.transactionType === 'added') {
+    await product.update({ quantity: product.quantity - transaction.quantity });
+    await transaction.destroy();
+    return { message: 'Transaction deleted' };
+  }
 };
 
 const deleteTransactionResolver = async (req) => {
   handleErrors(req.isAuth, errorName.UNAUTHORIZED);
-
-  // const transaction = await findOneTransaction(args.transactionId);
-
-  // handleErrors(transaction, 'Transaction not found');
-  // const { productId } = transaction.dataValues;
-  // const product = await products.findOne({ where: { productId } });
-
-  // await product.update({ quantity: product.quantity - transaction.quantity });
   await transactions.destroy({ truncate: true });
+  // transactions.save();
 
   return { message: 'Transaction deleted successfuly' };
 };

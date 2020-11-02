@@ -10,12 +10,12 @@ const generateToken = async (user) => {
     lastName: user.lastName,
     role: user.role
   };
-  const token = await jwt.sign(data, process.env.SECRET_KEY);
+  const token = jwt.sign(data, process.env.SECRET_KEY);
   return token;
 };
 
 const decodeToken = async (token) => {
-  const user = await jwt.verify(token, process.env.SECRET_KEY);
+  const user = jwt.verify(token, process.env.SECRET_KEY);
   return user;
 };
 
