@@ -7,7 +7,6 @@ const transactionsArray = [];
 const getAllTransactions = (allTransactions) => {
   // eslint-disable-next-line no-unused-expressions
   (allTransactions.length > 0) && allTransactions.forEach(async (element) => {
-    // console.log('All transactions', element.dataValues);
     const { dataValues } = element;
     const product = await products.findByPk(dataValues.productId);
     const data = {

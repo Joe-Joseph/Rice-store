@@ -6,11 +6,12 @@ import {
 } from 'graphql';
 import model from '../models';
 import userType from '../types/userTypes';
-import { getAllRoundsResolver } from '../controllers/rounds';
 import { resetPassword } from '../controllers/auth';
-import { roundType } from '../types/roundTypes';
 import transactionType from '../types/transactionTypes';
-import { getAllTransactionsResolver, getOneTransactionResolver } from '../controllers/transactions';
+import {
+  getAllTransactionsResolver,
+  getOneTransactionResolver
+} from '../controllers/transactions';
 import { getAllProductsResolver } from '../controllers/product';
 import productType from '../types/productTypes';
 
@@ -44,19 +45,10 @@ const Query = new GraphQLObjectType({
       }
     },
 
-    getAllRounds: {
-      type: new GraphQLList(roundType),
-      resolve(parent, args, req) {
-        return getAllRoundsResolver(req);
-      }
-    },
-
     getAllTransactions: {
       type: new GraphQLList(transactionType),
       async resolve(parent, args, req) {
-        // const transctions = await getAllTransactionsResolver(args, req);
         await getAllTransactionsResolver(args, req);
-        // console.log('Transactions', await getAllTransactionsResolver(args, req));
         return getAllTransactionsResolver(args, req);
       }
     },

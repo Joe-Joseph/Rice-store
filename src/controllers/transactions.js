@@ -83,6 +83,7 @@ const sellProductResolver = async (args, req) => {
     productId,
     oneBagCost: args.oneBagCost,
     quantity: args.quantity,
+    userId: id,
     transactionType: 'sold',
     totalCost: args.oneBagCost * args.quantity
   };
@@ -185,14 +186,6 @@ const deleteOneTransactionResolver = async (args, req) => {
 
 const deleteTransactionResolver = async (req) => {
   handleErrors(req.isAuth, errorName.UNAUTHORIZED);
-
-  // const transaction = await findOneTransaction(args.transactionId);
-
-  // handleErrors(transaction, 'Transaction not found');
-  // const { productId } = transaction.dataValues;
-  // const product = await products.findOne({ where: { productId } });
-
-  // await product.update({ quantity: product.quantity - transaction.quantity });
   await transactions.destroy({ truncate: true });
 
   return { message: 'Transaction deleted successfuly' };
